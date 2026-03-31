@@ -181,12 +181,13 @@
 .percent-input-wrap {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   background: var(--bg);
-  padding: 3px 6px;
+  padding: 4px 6px;
   border-radius: 4px;
   border: 1px solid var(--line-strong);
   transition: border-color 0.2s;
+  flex-shrink: 0;
 }
 
 .percent-input-wrap:focus-within {
@@ -194,13 +195,13 @@
 }
 
 .percent-input-wrap input {
-  width: 45px;
+  width: 32px;
   background: transparent;
   border: none;
   color: #fff;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 13px;
-  text-align: right;
+  font-size: 10px;
+  text-align: center;
   outline: none;
 }
 
@@ -217,7 +218,23 @@
 .percent-input-wrap span {
   color: var(--mid);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 7px;
+  font-size: 10px;
+}
+
+.pct-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+  transition: color 0.15s;
+}
+
+.pct-btn:hover {
+  color: var(--ink);
 }
 
   /* ── TAGS ────────────────────────────────────────── */
@@ -754,22 +771,22 @@ const TOTAL = 622;
 const MAJORITY = 312;
 
 const parties = [
-  { id:'ispn',  name:'Islamic Socialist Party of Nigeria',                abbr:'ISPN',   color:'#16a34a', ideology:'Islamic Socialism',  seats: 15, defaultSeats: 15, inCoalition:false, tags: ['Hausa','Secular','Islamic', 'Socialist'] },
-  {id:'pda',    name:"People's Democratic Alliance",                       abbr:'PDA',    color:'#e60000', ideology:'Nigerian path to Socialism',          seats: 90, defaultSeats: 90, inCoalition:false, tags: ['Secular', 'Progressive', 'Socialist', 'Green'] },
-  { id:'sbg',   name:"The Super Greens / Alliance '58",                   abbr:'SBG',    color:'#65a30d', ideology:'Green Politics',     seats: 25, defaultSeats: 25, inCoalition:false, tags: ['Secular','Yoruba','Progressive', 'Green'] },
+  {id:'pda',   name:"People's Democratic Alliance",       abbr:'PDA',    color:'#e60000', ideology:'Nigerian path to Socialism',          seats: 90, defaultSeats: 90, inCoalition:false, tags: ['Secular', 'Progressive', 'Socialist', 'Green'] },
+  { id:'salam', name:'Salam!',                                            abbr:'SALAM!', color:'#65a30d', ideology:'Conservatism (Islamic)',  seats: 90, defaultSeats: 90, inCoalition:false, tags: ['Hausa','Islamic', 'Conservative'] },
+  { id:'ndf',   name:'National Democratic Front',                         abbr:'NDF',    color:'#019838', ideology:'Conservatism (Khalilism)',          seats: 90, defaultSeats: 90, inCoalition:false, tags: ['Yoruba','Secular', 'Conservative'] },
   { id:'naa',   name:'New African Alliance',                              abbr:'NAA',    color:'#37b5fd', ideology:'Social Liberalism',     seats: 60, defaultSeats: 60, inCoalition:false, tags: ['Igbo','Secular','Progressive', 'Liberal'] },
   { id:'friln', name:'Front for the Restoration of Integrity and Liberty', abbr:'FRILN',  color:'#d97706', ideology:'Liberalism',    seats: 52, defaultSeats: 52, inCoalition:false, tags: ['Secular','Progressive', 'Liberal'] },
   { id:'abpl',  name:'All Biafra Progressive List',                       abbr:'ABPL',   color:'#241c69', ideology:'Regionalism (Igbo)',        seats: 45, defaultSeats: 45, inCoalition:false, tags: ['Igbo','Regional'] },
-  { id:'ndf',   name:'National Democratic Front',                         abbr:'NDF',    color:'#019838', ideology:'Conservatism (Khalilism)',          seats: 90, defaultSeats: 90, inCoalition:false, tags: ['Yoruba','Secular', 'Conservative'] },
-  { id:'srp',   name:'Southern Renewal Party',                            abbr:'SRP',    color:'#ffd700', ideology:'Regionalism (South)',        seats: 19, defaultSeats: 19, inCoalition:false, tags: ['Yoruba','Regional'] },
-  { id:'fonr',  name:'Friends of New Rwanda',                             abbr:'FONR',   color:'#e5be01', ideology:'Kagamism',         seats: 19, defaultSeats: 19, inCoalition:false, tags: ['Yoruba','Authoritarian'] },
   { id:'gland', name:'Godliness Labor and New Democracy',                 abbr:'GLAND',  color:'#c026d3', ideology:'Christian Socialism',    seats: 26, defaultSeats: 26, inCoalition:false, tags: ['Christian', 'Socialist'] },
-  { id:'salam', name:'Salam!',                                            abbr:'SALAM!', color:'#65a30d', ideology:'Conservatism (Islamic)',  seats: 90, defaultSeats: 90, inCoalition:false, tags: ['Hausa','Islamic', 'Conservative'] },
   { id:'oba',   name:'Order and Brilliance Assembly',                     abbr:'OBA',    color:'#0b646a', ideology:'Regionalism (Yoruba)', seats: 26, defaultSeats: 26, inCoalition:false, tags: ['Yoruba','Regional', 'Conservative', 'Christian'] },
-  { id:'noa',   name:'NEO OMU ARO',                                       abbr:'NOA',    color:'#ffffff', ideology:'Futurist Fascism',      seats: 22, defaultSeats: 22, inCoalition:false, tags: ['Igbo','Authoritarian'] },
+  { id:'sbg',   name:"The Super Greens / Alliance '58",                   abbr:'SBG',    color:'#65a30d', ideology:'Green Politics',     seats: 25, defaultSeats: 25, inCoalition:false, tags: ['Yoruba','Progressive', 'Green'] },
   { id:'ffa',   name:'Forgotten Farmer Alliance',                         abbr:'FFA',    color:'#e7c084', ideology:'Right-Wing Populism',       seats: 22, defaultSeats: 22, inCoalition:false, tags: ['Populist', 'Conservative'] },
+  { id:'noa',   name:'NEO OMU ARO',                                       abbr:'NOA',    color:'#ffffff', ideology:'Futurist Fascism',      seats: 22, defaultSeats: 22, inCoalition:false, tags: ['Igbo','Authoritarian'] },
+  { id:'fonr',  name:'Friends of New Rwanda',                             abbr:'FONR',   color:'#e5be01', ideology:'Kagamism',         seats: 19, defaultSeats: 19, inCoalition:false, tags: ['Yoruba','Authoritarian'] },
+  { id:'srp',   name:'Southern Renewal Party',                            abbr:'SRP',    color:'#ffd700', ideology:'Regionalism (South)',        seats: 19, defaultSeats: 19, inCoalition:false, tags: ['Yoruba','Regional'] },
+  { id:'ispn',  name:'Islamic Socialist Party of Nigeria',                abbr:'ISPN',   color:'#16a34a', ideology:'Islamic Socialism',  seats: 15, defaultSeats: 15, inCoalition:false, tags: ['Hausa','Secular','Islamic', 'Socialist'] },
   { id:'gop',   name:'Group of the People',                               abbr:'GOP',    color:'#16a34a', ideology:'Right-Wing Populism',           seats: 11, defaultSeats: 11, inCoalition:false, tags: ['Hausa','Islamic', 'Populist'] },
-  { id:'ind',   name:'Independents',                                       abbr:'IND',    color:'#94a3b8', ideology:'Non-partisan',    seats:  10, defaultSeats:  10, inCoalition:false, tags: ['Non-partisan'] },
+  { id:'ind',  name:'Independents',                                       abbr:'IND',    color:'#94a3b8', ideology:'Non-partisan',    seats:  10, defaultSeats:  10, inCoalition:false, tags: ['Non-partisan'] },
 ];
 
 const aqiData = [
@@ -823,6 +840,16 @@ function setFilter(tag) {
   renderPartyList(); 
 }
 
+function adjustPct(id, delta) {
+  const input = document.getElementById('slider-' + id);
+  if (input) {
+    let newVal = parseFloat(input.value) + delta;
+    newVal = Math.round(Math.max(0, Math.min(100, newVal)) * 10) / 10;
+    input.value = newVal.toFixed(1);
+    updateSeats(id, newVal);
+  }
+}
+
 function updateSeats(id, val) {
   let targetPercentage = parseFloat(val);
   if (isNaN(targetPercentage)) return; 
@@ -843,6 +870,7 @@ function updateSeats(id, val) {
     diff = targetSeats - p.seats;
   }
   
+  // Apply the target seats to the active party
   p.seats = targetSeats;
 
   if (diff > 0) {
@@ -929,17 +957,18 @@ function renderPartyList() {
         <div class="coalition-toggle ${p.inCoalition ? 'on' : ''}" id="toggle-${p.id}" onclick="toggleCoalition('${p.id}')"></div> 
       </div> 
       
-      <div class="party-bottom" style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">         
+      <div class="party-bottom">         
         
-        <div style="display: flex; align-items: center; gap: 6px; background: var(--bg); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--line-strong); flex-shrink: 0;"> 
+        <div class="percent-input-wrap"> 
+          <button class="pct-btn" onclick="adjustPct('${p.id}', -0.1)">−</button>
           <input type="number" 
                  min="0" max="100" step="0.1" 
                  value="${parseFloat((p.seats / TOTAL * 100).toFixed(1))}" 
                  id="slider-${p.id}" 
                  oninput="updateSeats('${p.id}', this.value)"
-                 onblur="this.value = parseFloat(((parties.find(x=>x.id==='${p.id}').seats / TOTAL) * 100).toFixed(1))"
-                 style="width: 40px; background: transparent; border: none; color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-align: right; outline: none;">
-          <span style="color: var(--mid); font-family: 'IBM Plex Mono', monospace; font-size: 14px;">%</span>
+                 onblur="this.value = parseFloat(((parties.find(x=>x.id==='${p.id}').seats / TOTAL) * 100).toFixed(1))">
+          <span>%</span>
+          <button class="pct-btn" onclick="adjustPct('${p.id}', 0.1)">+</button>
         </div> 
 
         <div style="display: flex; gap: 4px; flex: 1; padding: 0 12px; overflow-x: auto; scrollbar-width: none;">
@@ -1000,10 +1029,12 @@ function renderParliament() {
       allSeats.push({ id: p.id, name: p.name, color: p.color, inCoalition: p.inCoalition });
   });
 
+  // Base CSS for the seat transition
   let svgContent = `<style>
     .seat-dot { transition: opacity 0.3s ease, transform 0.2s ease, filter 0.3s ease; }
   `;
   
+  // Dynamic CSS to animate ALL seats of a party simultaneously using CSS :has()
   parties.forEach(p => {
     svgContent += `
       #parliament-svg:has(.group-${p.id}:hover) .group-${p.id} .seat-dot {
@@ -1034,6 +1065,7 @@ function renderParliament() {
       const opacity = seat.inCoalition ? 1 : 0.25;
       const glow = seat.inCoalition ? `filter: drop-shadow(0px 0px 4px ${seat.color}66);` : '';
       
+      // Added group-${seat.id} class and onclick to toggle the coalition
       svgContent += `<g class="seat-wrapper group-${seat.id}" onclick="toggleCoalition('${seat.id}')" style="transform-origin: ${x.toFixed(1)}px ${y.toFixed(1)}px; cursor: pointer;">
         <title>${seat.name} (Click to toggle coalition)</title>
         <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${config.seatRadius}" fill="${seat.color}" opacity="${opacity}" style="${glow}" class="seat-dot"/>
