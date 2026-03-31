@@ -507,9 +507,12 @@
   #parliament-svg { width: 100%; display: block; }
 
   /* ── PARTIES LIST ── */
-  .parties-section { padding: 0 0 30px; }
+  .parties-section {
+    padding: 0px;
+  }
+  
   .parties-header {
-    padding: 12px 16px 10px;
+    padding: 15px 16px 12.8px;
     border-bottom: 1px solid var(--line-strong);
     display: flex;
     align-items: center;
@@ -574,12 +577,11 @@
   }
   .party-ideology { font-family: 'IBM Plex Mono', monospace; font-size: 7px; color: var(--muted); letter-spacing: 0.06em; width: 68px; text-align: right; flex-shrink: 0; }
 
-  /* ── COALITION SUMMARY (fixed bottom) ── */
+  /* ── COALITION SUMMARY ── */
   .coalition-summary {
-    position: fixed;
+    position: sticky;
     bottom: 0;
     left: 50%;
-    transform: translateX(-50%);
     width: 100%;
     max-width: 430px;
     background: var(--bg-panel);
@@ -691,17 +693,25 @@
     <div class="parties-header-label">15 Parties · 622 Total Seats</div>
     <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
   </div>
-    <div class="tags-row" id="filterList" style="padding: 10px 16px; border-bottom: 1px solid var(--line-strong); border-top: none;">
-    </div>
+  
+  <div class="tags-row" id="filterList" style="padding: 10px 16px; border-bottom: 1px solid var(--line-strong); border-top: none;"></div>
+  
   <div id="partyList"></div>
+
+  <div class="coalition-summary">
+    <div class="coalition-label">Your coalition</div>
+    <div class="coalition-parties-row" id="coalitionChips">
+      <span class="coalition-empty">No parties selected — toggle parties above</span>
+    </div>
+  </div>
 </div>
 
-  <div class="tags-row" style="padding-bottom:16px;">
-    <span class="tag">Parliament</span>
-    <span class="tag">Nigeria</span>
-    <span class="tag">2058 Elections</span>
-    <span class="tag">Domestic Politics</span>
-  </div>
+<div class="tags-row" style="padding-bottom:16px;">
+  <span class="tag">Parliament</span>
+  <span class="tag">Nigeria</span>
+  <span class="tag">2058 Elections</span>
+  <span class="tag">Domestic Politics</span>
+</div>
 
   <div class="related-section">
     <div class="related-title">More Stories</div>
@@ -738,13 +748,6 @@
   </div>
   <div class="footer-text">© 2058 Forward! Media Group · Lagos · Abuja · New Makoko · Port Harcourt<br>The Voice of the People · Est. 2057 · All rights reserved.</div>
 </footer>
-
-<div class="coalition-summary">
-  <div class="coalition-label">Your coalition</div>
-  <div class="coalition-parties-row" id="coalitionChips">
-    <span class="coalition-empty">No parties selected — toggle parties above</span>
-  </div>
-</div>
 
 <script>
 const TOTAL = 622;
