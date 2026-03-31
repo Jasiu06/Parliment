@@ -833,29 +833,50 @@ function updateSeats(id, val) {
   let targetSeats = Math.round((targetPercentage / 100) * TOTAL);
 
   const p = parties.find(x => x.id === id);
-  const diff = targetSeats - p.seats;
+  let diff = targetSeats - p.seats;
 
   if (diff === 0) return; 
 
   const others = parties.filter(x => x.id !== id);
+  
   let otherSum = others.reduce((sum, x) => sum + x.seats, 0);
-
+  if (diff > otherSum) {
+    targetSeats = p.seats + otherSum;
+    diff = targetSeats - p.seats;
+  }
+  
+  // Apply the target seats to the active party
   p.seats = targetSeats;
 
-  if (otherSum > 0) {
-    let newOtherSumTarget = Math.max(0, otherSum - diff);
-    let seatsAllocated = 0;
-
-    others.forEach(other => {
-      let portion = other.seats / otherSum;
-      let newSeats = Math.round(portion * newOtherSumTarget);
-      other.seats = newSeats;
-      seatsAllocated += newSeats;
-    });
-
-    let remainder = newOtherSumTarget - seatsAllocated;
-    if (remainder !== 0) {
-      others.sort((a, b) => b.seats - a.seats)[0].seats += remainder;
+  if (diff > 0) {
+    let needed = diff;
+    
+    const ind = others.find(x => x.id === 'ind');
+    if (ind && needed > 0) {
+      const take = Math.min(ind.seats, needed);
+      ind.seats -= take;
+      needed -= take;
+    }
+    
+    if (needed > 0) {
+      // Sort the remaining parties from smallest to largest
+      const sortedOthers = others.filter(x => x.id !== 'ind').sort((a, b) => a.seats - b.seats);
+      
+      for (let i = 0; i < sortedOthers.length; i++) {
+        if (needed <= 0) break;
+        const take = Math.min(sortedOthers[i].seats, needed);
+        sortedOthers[i].seats -= take;
+        needed -= take;
+      }
+    }
+  } else {
+    let surplus = Math.abs(diff);
+    const ind = others.find(x => x.id === 'ind');
+    
+    if (ind) {
+      ind.seats += surplus;
+    } else {
+      others.sort((a, b) => a.seats - b.seats)[0].seats += surplus;
     }
   }
 
