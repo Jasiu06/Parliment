@@ -960,7 +960,7 @@ function renderPartyList() {
                  value="${(p.seats / TOTAL * 100).toFixed(1)}" 
                  id="slider-${p.id}" 
                  oninput="updateSeats('${p.id}', this.value)"
-                 onblur="this.value = ((parties.find(x=>x.id==='${p.id}').seats / TOTAL) * 100).toFixed(1)"
+                 onblur="this.value = parseFloat(((parties.find(x=>x.id==='${p.id}').seats / TOTAL) * 100).toFixed(1))"
                  style="width: 40px; background: transparent; border: none; color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-align: right; outline: none;">
           <span style="color: var(--mid); font-family: 'IBM Plex Mono', monospace; font-size: 14px;">%</span>
         </div> 
@@ -1021,7 +1021,7 @@ function updateSeats(id, val) {
     document.getElementById('seats-' + party.id).textContent = party.seats;
 
     if (party.id !== id) {
-      document.getElementById('slider-' + party.id).value = ((party.seats / TOTAL) * 100).toFixed(1);
+      document.getElementById('slider-' + party.id).value = parseFloat(((party.seats / TOTAL) * 100).toFixed(1));
     }
   });
 
