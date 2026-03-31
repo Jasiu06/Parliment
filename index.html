@@ -164,6 +164,56 @@
   .nav-item.active { color: var(--ink); border-bottom: 2px solid var(--red); padding-bottom: 8px; }
   .nav-item:hover { color: var(--mid); }
 
+/* --- NEW PERCENTAGE INPUT STYLES --- */
+.party-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.percent-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg);
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--line-strong);
+  transition: border-color 0.2s;
+}
+
+.percent-input-wrap:focus-within {
+  border-color: var(--accent);
+}
+
+.percent-input-wrap input {
+  width: 45px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  text-align: right;
+  outline: none;
+}
+
+/* Hide the up/down arrows on the number input */
+.percent-input-wrap input[type=number]::-webkit-inner-spin-button, 
+.percent-input-wrap input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none !important; 
+  margin: 0 !important; 
+}
+.percent-input-wrap input[type=number] {
+  -moz-appearance: textfield!important; 
+}
+
+.percent-input-wrap span {
+  color: var(--mid);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7px;
+}
+
   /* ── TAGS ────────────────────────────────────────── */
   .tags-row {
     display: flex;
@@ -511,21 +561,10 @@
   }
   .coalition-toggle.on::after { transform: translateX(12px); background: #fff; }
   .party-bottom { display: flex; align-items: center; gap: 8px; }
-  .slider-wrap { flex: 1; position: relative; }
   input[type=range] {
     -webkit-appearance: none; appearance: none; width: 100%; height: 4px;
     border-radius: 2px; background: var(--bg); border: 1px solid var(--line-strong);
     outline: none; cursor: pointer;
-  }
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
-    background: var(--ink); cursor: pointer; border: 2px solid var(--bg);
-    box-shadow: 0 0 0 1px var(--muted); transition: box-shadow 0.15s;
-  }
-  input[type=range]::-webkit-slider-thumb:hover { box-shadow: 0 0 0 3px rgba(74,158,255,0.3); }
-  input[type=range]::-moz-range-thumb {
-    width: 14px; height: 14px; border-radius: 50%; background: var(--ink);
-    cursor: pointer; border: 2px solid var(--bg);
   }
   .party-ideology { font-family: 'IBM Plex Mono', monospace; font-size: 7px; color: var(--muted); letter-spacing: 0.06em; width: 68px; text-align: right; flex-shrink: 0; }
 
@@ -894,30 +933,42 @@ function renderParliament() {
   svg.innerHTML = svgContent;
 }
 
-function renderPartyList() {
-  const list = document.getElementById('partyList');
-  list.innerHTML = '';
-  parties.forEach(p => {
-    const row = document.createElement('div');
-    row.className = 'party-row' + (p.inCoalition?' in-coalition':'');
-    row.innerHTML = `
-      <div class="party-top">
-        <div class="party-dot" style="background:${p.color};box-shadow:0 0 6px ${p.color};"></div>
-        <div class="party-name">${p.name}</div>
-        <div class="party-abbr">${p.abbr}</div>
-        <div class="party-seats-display" style="color:${p.color};" id="seats-${p.id}">${p.seats}</div>
-        <div class="coalition-toggle ${p.inCoalition?'on':''}" id="toggle-${p.id}" onclick="toggleCoalition('${p.id}')"></div>
-      </div>
-      <div class="party-bottom">
-        <div class="slider-wrap">
-          <input type="range" min="0" max="100" step="0.1" value="${(p.seats / TOTAL * 100).toFixed(1)}"
-            id="slider-${p.id}"
-            oninput="updateSeats('${p.id}', this.value)"
-            style="accent-color:${p.color};">
-        </div>
-        <div class="party-ideology">${p.ideology}</div>
+function renderPartyList() { 
+  const list = document.getElementById('partyList'); 
+  list.innerHTML = ''; 
+  
+  parties.forEach(p => { 
+    const row = document.createElement('div'); 
+    row.className = 'party-row' + (p.inCoalition ? ' in-coalition' : ''); 
+    
+    // Calculate the current percentage
+    const currentPercentage = (p.seats / TOTAL * 100).toFixed(1);
+    
+    row.innerHTML = ` 
+      <div class="party-top"> 
+        <div class="party-dot" style="background:${p.color};box-shadow:0 0 6px ${p.color};"></div> 
+        <div class="party-name">${p.name}</div> 
+        <div class="party-abbr">${p.abbr}</div> 
+        <div class="party-seats-display" style="color:${p.color};" id="seats-${p.id}">${p.seats}</div> 
+        <div class="coalition-toggle ${p.inCoalition ? 'on' : ''}" id="toggle-${p.id}" onclick="toggleCoalition('${p.id}')"></div> 
+      </div> 
+      
+      <div class="party-bottom" style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">         
+        <div style="display: flex; align-items: center; gap: 6px; background: var(--bg); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--line-strong);"> 
+          <input type="number" 
+                 min="0" max="100" step="0.1" 
+                 value="${(p.seats / TOTAL * 100).toFixed(1)}" 
+                 id="slider-${p.id}" 
+                 oninput="updateSeats('${p.id}', this.value)"
+                 onblur="this.value = ((parties.find(x=>x.id==='${p.id}').seats / TOTAL) * 100).toFixed(1)"
+                 style="width: 40px; background: transparent; border: none; color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-align: right; outline: none;">
+          <span style="color: var(--mid); font-family: 'IBM Plex Mono', monospace; font-size: 14px;">%</span>
+        </div> 
+
+        <div class="party-ideology">${p.ideology}</div> 
       </div>`;
-    list.appendChild(row);
+      
+    list.appendChild(row); 
   });
 }
 
@@ -932,19 +983,48 @@ function toggleCoalition(id) {
 }
 
 function updateSeats(id, val) {
-  val = parseFloat(val);
-  let targetSeats = Math.round((val / 100) * TOTAL);
-  const p = parties.find(x=>x.id===id);
-  const others = parties.filter(x=>x.id!==id);
-  const otherSum = others.reduce((s,x)=>s+x.seats,0);
+  let targetPercentage = parseFloat(val);
   
-  targetSeats = Math.min(targetSeats, TOTAL - otherSum);
-  targetSeats = Math.max(targetSeats, 0);
+  if (isNaN(targetPercentage)) return; 
+
+  targetPercentage = Math.max(0, Math.min(100, targetPercentage));
+  let targetSeats = Math.round((targetPercentage / 100) * TOTAL);
+
+  const p = parties.find(x => x.id === id);
+  const diff = targetSeats - p.seats;
+
+  if (diff === 0) return; 
+
+  const others = parties.filter(x => x.id !== id);
+  let otherSum = others.reduce((sum, x) => sum + x.seats, 0);
+
   p.seats = targetSeats;
-  
-  document.getElementById('seats-'+id).textContent = targetSeats;
-  // Snap slider back to constrained correct percentage in case they pushed past max limits
-  document.getElementById('slider-'+id).value = (targetSeats / TOTAL * 100).toFixed(1);
+
+  if (otherSum > 0) {
+    let newOtherSumTarget = Math.max(0, otherSum - diff);
+    let seatsAllocated = 0;
+
+    others.forEach(other => {
+      let portion = other.seats / otherSum;
+      let newSeats = Math.round(portion * newOtherSumTarget);
+      other.seats = newSeats;
+      seatsAllocated += newSeats;
+    });
+
+    let remainder = newOtherSumTarget - seatsAllocated;
+    if (remainder !== 0) {
+      others.sort((a, b) => b.seats - a.seats)[0].seats += remainder;
+    }
+  }
+
+  parties.forEach(party => {
+    document.getElementById('seats-' + party.id).textContent = party.seats;
+
+    if (party.id !== id) {
+      document.getElementById('slider-' + party.id).value = ((party.seats / TOTAL) * 100).toFixed(1);
+    }
+  });
+
   renderAll();
 }
 
