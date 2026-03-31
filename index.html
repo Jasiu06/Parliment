@@ -900,7 +900,7 @@ function renderPartyList() {
     row.className = 'party-row' + (p.inCoalition ? ' in-coalition' : ''); 
     
     const tagsHtml = p.tags ? p.tags.map(t => 
-      `<span style="font-family: 'IBM Plex Mono', monospace; font-size: 7px; color: ${p.color}; border: 1px solid ${p.color}40; padding: 2px 5px; border-radius: 2px; text-transform: uppercase; white-space: nowrap;">${t}</span>`
+      `<span onclick="setFilter('${t}')" style="cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 7px; color: ${p.color}; border: 1px solid ${p.color}40; padding: 2px 5px; border-radius: 2px; text-transform: uppercase; white-space: nowrap; transition: background 0.2s;" onmouseover="this.style.background='${p.color}20'" onmouseout="this.style.background='transparent'">${t}</span>`
     ).join('') : '';
 
     row.innerHTML = ` 
