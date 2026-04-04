@@ -164,7 +164,7 @@
   .nav-item.active { color: var(--ink); border-bottom: 2px solid var(--red); padding-bottom: 8px; }
   .nav-item:hover { color: var(--mid); }
 
-/* --- NEW PERCENTAGE INPUT STYLES --- */
+/* --- NEW INPUT STYLES --- */
 .tag.active-filter {
   background: var(--ink);
   color: var(--bg);
@@ -188,6 +188,10 @@
   border: 1px solid var(--line-strong);
   transition: border-color 0.2s;
   flex-shrink: 0;
+}
+
+.percent-input-wrap {
+  display: none !important;
 }
 
 .percent-input-wrap:focus-within {
@@ -474,11 +478,11 @@
     bottom: -3px;
     width: 2px;
     background: rgba(255,255,255,0.7);
-    left: calc(311 / 622 * 100%);
+    left: 50%;
     z-index: 2;
   }
   .bar-majority-line::after {
-    content: '312';
+    content: attr(data-majority);
     position: absolute;
     bottom: -14px;
     left: 50%;
@@ -676,7 +680,8 @@
 <div class="article-header">
   <div class="section-tag">Politics · Interactive</div>
   <h1 class="article-headline">Build Your Own Government</h1>
-  <p class="article-deck">The National Assembly has 622 seats. A parliamentary majority requires 312. Adjust each party's seat count and toggle parties into your coalition — can you form a government?</p>
+  <p class="article-deck">
+    Now that the results of the Constitutional Convention election have been announced, the most difficult task remains — forming a coalition government. Try your hand at forming a stable government that will be able to lead Nigeria into the future.</p>
   <div class="article-byline">By <b>Forward! Politics Desk</b> · 14 April 2058</div>
 </div>
 
@@ -688,12 +693,12 @@
     </div>
     <div style="text-align:right;">
       <div class="majority-label">Majority needed</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--mid);line-height:1;">312 / 622</div>
+      <div id="majorityNeededText" style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--mid);line-height:1;">312 / 622</div>
     </div>
   </div>
   <div class="bar-track">
     <div class="bar-fill-wrap" id="barFill"></div>
-    <div class="bar-majority-line"></div>
+    <div class="bar-majority-line" data-majority="312"></div>
   </div>
   <div class="majority-status-row">
     <div class="coalition-seats-label" id="seatGap">Toggle parties below to build a coalition</div>
@@ -707,7 +712,7 @@
 
 <div class="parties-section">
   <div class="parties-header">
-    <div class="parties-header-label">15 Parties · 622 Total Seats</div>
+    <div class="parties-header-label" id="totalSeatsHeader">15 Parties · 622 Total Seats</div>
     <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
   </div>
   
@@ -767,26 +772,23 @@
 </footer>
 
 <script>
-const TOTAL = 622;
-const MAJORITY = 312;
-
 const parties = [
-  { id:'ispn',  name:'Islamic Socialist Party of Nigeria',                abbr:'ISPN',   color:'#16a34a', ideology:'Islamic Socialism',  seats: 15, defaultSeats: 15, inCoalition:false, tags: ['Hausa','Secular','Islamic', 'Socialist'] },
-  { id:'pda',   name:"People's Democratic Alliance",                       abbr:'PDA',    color:'#e60000', ideology:'Nigerian path to Socialism',          seats: 90, defaultSeats: 90, inCoalition:false, tags: ['Secular', 'Progressive', 'Socialist', 'Green'] },
-  { id:'mecchi',   name:"Mottainai.net.ng Ecological and Collective/Conserved Holocene Initiative",                   abbr:'MECCHI',    color:'#93c572', ideology:'Green Politics',     seats: 25, defaultSeats: 25, inCoalition:false, tags: ['Yoruba','Progressive', 'Green'] },
-  { id:'naa',   name:'New African Alliance',                              abbr:'NAA',    color:'#37b5fd', ideology:'Social Liberalism',     seats: 60, defaultSeats: 60, inCoalition:false, tags: ['Igbo','Secular','Progressive', 'Liberal'] },
-  { id:'friln', name:'Front for the Restoration of Integrity and Liberty', abbr:'FRILN',  color:'#d97706', ideology:'Liberalism',    seats: 52, defaultSeats: 52, inCoalition:false, tags: ['Secular','Progressive', 'Liberal'] },
-  { id:'abpl',  name:'All Biafra Progressive List',                       abbr:'ABPL',   color:'#241c69', ideology:'Regionalism (Igbo)',        seats: 45, defaultSeats: 45, inCoalition:false, tags: ['Igbo','Regional'] },
-  { id:'ndf',   name:'National Democratic Front',                         abbr:'NDF',    color:'#019838', ideology:'Conservatism (Khalilism)',          seats: 90, defaultSeats: 90, inCoalition:false, tags: ['Yoruba','Secular', 'Conservative'] },
-  { id:'srp',   name:'Southern Renewal Party',                            abbr:'SRP',    color:'#ffd700', ideology:'Regionalism (South)',        seats: 19, defaultSeats: 19, inCoalition:false, tags: ['Yoruba','Regional'] },
-  { id:'fonr',  name:'Friends of New Rwanda',                             abbr:'FONR',   color:'#e5be01', ideology:'Kagamism',         seats: 19, defaultSeats: 19, inCoalition:false, tags: ['Yoruba','Authoritarian'] },
-  { id:'gland', name:'Godliness Labor and New Democracy',                 abbr:'GLAND',  color:'#c026d3', ideology:'Christian Socialism',    seats: 26, defaultSeats: 26, inCoalition:false, tags: ['Christian', 'Socialist'] },
-  { id:'salam', name:'Salam!',                                            abbr:'SALAM!', color:'#65a30d', ideology:'Conservatism (Islamic)',  seats: 90, defaultSeats: 90, inCoalition:false, tags: ['Hausa','Islamic', 'Conservative'] },
-  { id:'oba',   name:'Order and Brilliance Assembly',                     abbr:'OBA',    color:'#0b646a', ideology:'Regionalism (Yoruba)', seats: 26, defaultSeats: 26, inCoalition:false, tags: ['Yoruba','Regional', 'Conservative', 'Christian'] },
-  { id:'noa',   name:'NEO OMU ARO',                                       abbr:'NOA',    color:'#ffffff', ideology:'Futurist Fascism',      seats: 22, defaultSeats: 22, inCoalition:false, tags: ['Igbo','Authoritarian'] },
-  { id:'ffa',   name:'Forgotten Farmer Alliance',                         abbr:'FFA',    color:'#e7c084', ideology:'Right-Wing Populism',       seats: 22, defaultSeats: 22, inCoalition:false, tags: ['Populist', 'Conservative'] },
-  { id:'gop',   name:'Group of the People',                               abbr:'GOP',    color:'#16a34a', ideology:'Right-Wing Populism',           seats: 11, defaultSeats: 11, inCoalition:false, tags: ['Hausa','Islamic', 'Populist'] },
-  { id:'ind',  name:'Independents',                                       abbr:'IND',    color:'#94a3b8', ideology:'Non-partisan',    seats:  10, defaultSeats:  10, inCoalition:false, tags: ['Non-partisan'] },
+  { id:'ispn',  name:'Islamic Socialist Party of Nigeria',               abbr:'ISPN',  color:'#16a34a', ideology:'Islamic Socialism',  seats: 4, defaultSeats: 4, inCoalition:false, tags: ['Hausa','Secular','Islamic', 'Socialist'] },
+  { id:'pda',   name:"People's Democratic Alliance",                     abbr:'PDA',   color:'#e60000', ideology:'Nigerian path to Socialism',          seats: 11, defaultSeats: 11, inCoalition:false, tags: ['Secular', 'Progressive', 'Socialist', 'Green'] },
+  { id:'mecchi',   name:"MOTTAINAI-EC/CHI",                  abbr:'MECCHI',   color:'#93c572', ideology:'Green Politics',     seats: 15, defaultSeats: 15, inCoalition:false, tags: ['Yoruba','Progressive', 'Green'] },
+  { id:'naa',   name:'New African Alliance',                             abbr:'NAA',   color:'#37b5fd', ideology:'Social Liberalism',     seats: 36, defaultSeats: 36, inCoalition:false, tags: ['Igbo','Secular','Progressive', 'Liberal'] },
+  { id:'friln', name:'Front for the Restoration of Integrity and Liberty', abbr:'FRILN', color:'#d97706', ideology:'Liberalism',    seats: 48, defaultSeats: 48, inCoalition:false, tags: ['Secular','Progressive', 'Liberal'] },
+  { id:'abpl',  name:'All Biafra Progressive List',                      abbr:'ABPL',  color:'#241c69', ideology:'Regionalism (Igbo)',        seats: 91, defaultSeats: 91, inCoalition:false, tags: ['Igbo','Regional'] },
+  { id:'ndf',   name:'National Democratic Front',                        abbr:'NDF',   color:'#019838', ideology:'Conservatism (Khalilism)',          seats: 68, defaultSeats: 68, inCoalition:false, tags: ['Yoruba','Secular', 'Conservative'] },
+  { id:'srp',   name:'Southern Renewal Party',                           abbr:'SRP',   color:'#ffd700', ideology:'Regionalism (South)',        seats: 84, defaultSeats: 84, inCoalition:false, tags: ['Yoruba','Regional'] },
+  { id:'fonr',  name:'Friends of New Rwanda',                            abbr:'FONR',  color:'#e5be01', ideology:'Kagamism',         seats: 0, defaultSeats: 0, inCoalition:false, tags: ['Yoruba','Authoritarian'] },
+  { id:'gland', name:'Godliness Labor and New Democracy',                abbr:'GLAND', color:'#c026d3', ideology:'Christian Socialism',   seats: 13, defaultSeats: 13, inCoalition:false, tags: ['Christian', 'Socialist'] },
+  { id:'salam', name:'Salam!',                                           abbr:'SALAM!', color:'#65a30d', ideology:'Conservatism (Islamic)',  seats: 121, defaultSeats: 121, inCoalition:false, tags: ['Hausa','Islamic', 'Conservative'] },
+  { id:'oba',   name:'Order and Brilliance Assembly',                    abbr:'OBA',   color:'#0b646a', ideology:'Regionalism (Yoruba)', seats: 17, defaultSeats: 17, inCoalition:false, tags: ['Yoruba','Regional', 'Conservative', 'Christian'] },
+  { id:'noa',   name:'NEO OMU ARO',                                      abbr:'NOA',   color:'#ffffff', ideology:'Futurist Fascism',      seats: 12, defaultSeats: 12, inCoalition:false, tags: ['Igbo','Authoritarian'] },
+  { id:'ffa',   name:'Forgotten Farmer Alliance',                        abbr:'FFA',   color:'#e7c084', ideology:'Right-Wing Populism',      seats: 21, defaultSeats: 21, inCoalition:false, tags: ['Populist', 'Conservative'] },
+  { id:'gop',   name:'Group of the People',                              abbr:'GOP',   color:'#16a34a', ideology:'Right-Wing Populism',            seats: 83, defaultSeats: 83, inCoalition:false, tags: ['Hausa','Islamic', 'Populist'] },
+  { id:'ind',  name:'Independents',                                      abbr:'IND',   color:'#94a3b8', ideology:'Non-partisan',    seats:  10, defaultSeats:  10, inCoalition:false, tags: ['Non-partisan'] },
 ];
 
 const aqiData = [
@@ -819,7 +821,12 @@ if(nav) {
   nav.addEventListener('mousemove', e=>{if(!isDn)return; e.preventDefault(); nav.scrollLeft=scL-(e.pageX-nav.offsetLeft-stX);});
 }
 
-function totalSeats() { return parties.reduce((s,p)=>s+p.seats,0); }
+// Replaced fixed TOTAL and MAJORITY constants with dynamic functions
+function totalSeats() { return parties.reduce((s,p) => s + p.seats, 0); }
+function majorityNeeded() { 
+  const tot = totalSeats();
+  return tot === 0 ? 0 : Math.floor(tot / 2) + 1; 
+}
 function coalitionSeats() { return parties.filter(p=>p.inCoalition).reduce((s,p)=>s+p.seats,0); }
 
 let activeTagFilter = 'All';
@@ -840,80 +847,28 @@ function setFilter(tag) {
   renderPartyList(); 
 }
 
-function adjustPct(id, delta) {
-  const input = document.getElementById('slider-' + id);
+// Adjust seats directly, removed complex reallocation logic
+function adjustSeats(id, delta) {
+  const input = document.getElementById('input-' + id);
   if (input) {
-    let newVal = parseFloat(input.value) + delta;
-    newVal = Math.round(Math.max(0, Math.min(100, newVal)) * 10) / 10;
-    input.value = newVal.toFixed(1);
+    let newVal = parseInt(input.value) + delta;
+    newVal = Math.max(0, newVal); // prevent negative seats
+    input.value = newVal;
     updateSeats(id, newVal);
   }
 }
 
+// Seat changes now only affect the edited party
 function updateSeats(id, val) {
-  let targetPercentage = parseFloat(val);
-  if (isNaN(targetPercentage)) return; 
-
-  targetPercentage = Math.max(0, Math.min(100, targetPercentage));
-  let targetSeats = Math.round((targetPercentage / 100) * TOTAL);
+  let targetSeats = parseInt(val);
+  if (isNaN(targetSeats) || targetSeats < 0) targetSeats = 0; 
 
   const p = parties.find(x => x.id === id);
-  let diff = targetSeats - p.seats;
-
-  if (diff === 0) return; 
-
-  const others = parties.filter(x => x.id !== id);
-  
-  let otherSum = others.reduce((sum, x) => sum + x.seats, 0);
-  if (diff > otherSum) {
-    targetSeats = p.seats + otherSum;
-    diff = targetSeats - p.seats;
-  }
-  
-  // Apply the target seats to the active party
   p.seats = targetSeats;
-
-  if (diff > 0) {
-    let needed = diff;
-    
-    const ind = others.find(x => x.id === 'ind');
-    if (ind && needed > 0) {
-      const take = Math.min(ind.seats, needed);
-      ind.seats -= take;
-      needed -= take;
-    }
-    
-    if (needed > 0) {
-      const sortedOthers = others.filter(x => x.id !== 'ind').sort((a, b) => a.seats - b.seats);
-      
-      for (let i = 0; i < sortedOthers.length; i++) {
-        if (needed <= 0) break;
-        const take = Math.min(sortedOthers[i].seats, needed);
-        sortedOthers[i].seats -= take;
-        needed -= take;
-      }
-    }
-  } else {
-    let surplus = Math.abs(diff);
-    const ind = others.find(x => x.id === 'ind');
-    
-    if (ind) {
-      ind.seats += surplus;
-    } else {
-      others.sort((a, b) => a.seats - b.seats)[0].seats += surplus;
-    }
-  }
 
   parties.forEach(party => {
     const seatDisplay = document.getElementById('seats-' + party.id);
     if (seatDisplay) seatDisplay.textContent = party.seats;
-
-    if (party.id !== id) {
-      const slider = document.getElementById('slider-' + party.id);
-      if (slider) {
-         slider.value = parseFloat(((party.seats / TOTAL) * 100).toFixed(1));
-      }
-    }
   });
 
   renderAll();
@@ -960,15 +915,15 @@ function renderPartyList() {
       <div class="party-bottom">         
         
         <div class="percent-input-wrap"> 
-          <button class="pct-btn" onclick="adjustPct('${p.id}', -0.1)">−</button>
+          <button class="pct-btn" onclick="adjustSeats('${p.id}', -1)">−</button>
           <input type="number" 
-                 min="0" max="100" step="0.1" 
-                 value="${parseFloat((p.seats / TOTAL * 100).toFixed(1))}" 
-                 id="slider-${p.id}" 
+                 min="0" step="1" 
+                 value="${p.seats}" 
+                 id="input-${p.id}" 
                  oninput="updateSeats('${p.id}', this.value)"
-                 onblur="this.value = parseFloat(((parties.find(x=>x.id==='${p.id}').seats / TOTAL) * 100).toFixed(1))">
-          <span>%</span>
-          <button class="pct-btn" onclick="adjustPct('${p.id}', 0.1)">+</button>
+                 onblur="this.value = parties.find(x=>x.id==='${p.id}').seats">
+          <span>Seats</span>
+          <button class="pct-btn" onclick="adjustSeats('${p.id}', 1)">+</button>
         </div> 
 
         <div style="display: flex; gap: 4px; flex: 1; padding: 0 12px; overflow-x: auto; scrollbar-width: none;">
@@ -984,44 +939,74 @@ function renderPartyList() {
 
 function renderMajorityBar() {
   const cs = coalitionSeats();
+  const tot = totalSeats();
+  const maj = majorityNeeded();
+
   const fill = document.getElementById('barFill');
   const count = document.getElementById('coalitionCount');
   const badge = document.getElementById('majorityBadge');
   const gap = document.getElementById('seatGap');
+  const majNeededText = document.getElementById('majorityNeededText');
+  const totalSeatsHeader = document.getElementById('totalSeatsHeader');
+
   if(!fill || !count || !badge || !gap) return;
+
+  // Update dynamic labels
+  if(majNeededText) majNeededText.textContent = `${maj} / ${tot}`;
+  if(totalSeatsHeader) totalSeatsHeader.textContent = `${parties.length} Parties · ${tot} Total Seats`;
 
   let html = '';
   parties.forEach(p => {
     if (!p.inCoalition || p.seats === 0) return;
-    const pct = (p.seats / TOTAL) * 100;
+    const pct = tot > 0 ? (p.seats / tot) * 100 : 0;
     html += `<div class="bar-segment" style="width:${pct}%;background:${p.color};opacity:0.9;"></div>`;
   });
   fill.innerHTML = html;
+  
   count.textContent = cs;
-  count.className = 'majority-count ' + (cs >= MAJORITY ? 'achieved' : cs >= MAJORITY-30 ? 'close' : 'far');
-  badge.className = 'majority-badge ' + (cs >= MAJORITY ? 'achieved' : cs >= MAJORITY-30 ? 'close' : 'far');
-  badge.textContent = cs >= MAJORITY ? '✓ Majority!' : cs >= MAJORITY-30 ? 'Almost…' : 'No Majority';
-  const need = MAJORITY - cs;
+  count.className = 'majority-count ' + (cs >= maj ? 'achieved' : cs >= maj-30 ? 'close' : 'far');
+  badge.className = 'majority-badge ' + (cs >= maj ? 'achieved' : cs >= maj-30 ? 'close' : 'far');
+  badge.textContent = cs >= maj ? '✓ Majority!' : cs >= Math.max(1, maj-30) ? 'Almost…' : 'No Majority';
+  
+  const need = maj - cs;
   if (need <= 0) {
-    const surplus = cs - MAJORITY;
+    const surplus = cs - maj;
     gap.textContent = `Majority secured — ${surplus} seat${surplus===1?'':'s'} to spare`;
   } else {
     gap.textContent = `Need ${need} more seat${need===1?'':'s'} for majority`;
+  }
+
+  // Position the majority threshold line dynamically
+  const majLine = document.querySelector('.bar-majority-line');
+  if (majLine && tot > 0) {
+    majLine.style.left = `calc(${maj} / ${tot} * 100%)`;
+    majLine.setAttribute('data-majority', maj);
+  } else if (majLine) {
+    majLine.style.left = `50%`;
+    majLine.setAttribute('data-majority', 0);
   }
 }
 
 function renderParliament() {
   const svg = document.getElementById('parliament-svg');
   if(!svg) return;
-  const config = { width: 400, height: 220, rows: 7, rStart: 95, rStep: 14, seatRadius: 2.2, majority: MAJORITY };
+  
+  const total = totalSeats();
+  const maj = majorityNeeded();
+  const cs = coalitionSeats();
+
+  const config = { width: 400, height: 220, rows: 7, rStart: 95, rStep: 14, seatRadius: 2.2, majority: maj };
   const cx = config.width / 2, cy = config.height - 25;
-  const total = totalSeats(), cs = coalitionSeats();
 
   const radii = Array.from({length: config.rows}, (_, r) => config.rStart + r * config.rStep);
   const propSum = radii.reduce((a, b) => a + b, 0);
-  let seatsInRows = radii.map(r => Math.round((r / propSum) * total));
-  let diff = total - seatsInRows.reduce((a, b) => a + b, 0);
-  seatsInRows[seatsInRows.length - 1] += diff;
+  
+  let seatsInRows = radii.map(r => total > 0 ? Math.round((r / propSum) * total) : 0);
+  
+  if (total > 0) {
+    let diff = total - seatsInRows.reduce((a, b) => a + b, 0);
+    seatsInRows[seatsInRows.length - 1] += diff;
+  }
 
   let allSeats = [];
   parties.forEach(p => {
@@ -1065,7 +1050,6 @@ function renderParliament() {
       const opacity = seat.inCoalition ? 1 : 0.25;
       const glow = seat.inCoalition ? `filter: drop-shadow(0px 0px 4px ${seat.color}66);` : '';
       
-      // Added group-${seat.id} class and onclick to toggle the coalition
       svgContent += `<g class="seat-wrapper group-${seat.id}" onclick="toggleCoalition('${seat.id}')" style="transform-origin: ${x.toFixed(1)}px ${y.toFixed(1)}px; cursor: pointer;">
         <title>${seat.name} (Click to toggle coalition)</title>
         <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${config.seatRadius}" fill="${seat.color}" opacity="${opacity}" style="${glow}" class="seat-dot"/>
@@ -1075,7 +1059,7 @@ function renderParliament() {
 
   const maxRadius = radii[radii.length - 1];
   svgContent += `<line x1="${cx - maxRadius - 10}" y1="${cy + 8}" x2="${cx + maxRadius + 10}" y2="${cy + 8}" stroke="rgba(150, 150, 150, 0.2)" stroke-width="1.5" stroke-dasharray="3,4"/>`;
-  const clr = cs >= config.majority ? '#22c55e' : cs >= config.majority - 30 ? '#f59e0b' : '#ef4444';
+  const clr = cs >= config.majority ? '#22c55e' : cs >= Math.max(1, config.majority - 30) ? '#f59e0b' : '#ef4444';
   svgContent += `<text x="${cx}" y="${cy - 10}" text-anchor="middle" font-family="'Bebas Neue', system-ui, sans-serif" font-size="34" font-weight="bold" fill="${clr}">${cs}</text>`;
   svg.innerHTML = svgContent;
 }
