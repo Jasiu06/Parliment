@@ -773,22 +773,22 @@
 
 <script>
 const parties = [
-  { id:'ispn',  name:'Islamic Socialist Party of Nigeria',               abbr:'ISPN',  color:'#16a34a', ideology:'Islamic Socialism',  seats: 4, defaultSeats: 4, inCoalition:false, tags: ['Hausa','Secular','Islamic', 'Socialist'] },
-  { id:'pda',   name:"People's Democratic Alliance",                     abbr:'PDA',   color:'#e60000', ideology:'Nigerian path to Socialism',          seats: 11, defaultSeats: 11, inCoalition:false, tags: ['Secular', 'Progressive', 'Socialist', 'Green'] },
-  { id:'mecchi',   name:"MOTTAINAI-EC/CHI",                  abbr:'MECCHI',   color:'#93c572', ideology:'Green Politics',     seats: 15, defaultSeats: 15, inCoalition:false, tags: ['Yoruba','Progressive', 'Green'] },
-  { id:'naa',   name:'New African Alliance',                             abbr:'NAA',   color:'#37b5fd', ideology:'Social Liberalism',     seats: 36, defaultSeats: 36, inCoalition:false, tags: ['Igbo','Secular','Progressive', 'Liberal'] },
-  { id:'friln', name:'Front for the Restoration of Integrity and Liberty', abbr:'FRILN', color:'#d97706', ideology:'Liberalism',    seats: 48, defaultSeats: 48, inCoalition:false, tags: ['Secular','Progressive', 'Liberal'] },
-  { id:'abpl',  name:'All Biafra Progressive List',                      abbr:'ABPL',  color:'#241c69', ideology:'Regionalism (Igbo)',        seats: 91, defaultSeats: 91, inCoalition:false, tags: ['Igbo','Regional'] },
-  { id:'ndf',   name:'National Democratic Front',                        abbr:'NDF',   color:'#019838', ideology:'Conservatism (Khalilism)',          seats: 68, defaultSeats: 68, inCoalition:false, tags: ['Yoruba','Secular', 'Conservative'] },
-  { id:'srp',   name:'Southern Renewal Party',                           abbr:'SRP',   color:'#ffd700', ideology:'Regionalism (South)',        seats: 84, defaultSeats: 84, inCoalition:false, tags: ['Yoruba','Regional'] },
-  { id:'fonr',  name:'Friends of New Rwanda',                            abbr:'FONR',  color:'#e5be01', ideology:'Kagamism',         seats: 0, defaultSeats: 0, inCoalition:false, tags: ['Yoruba','Authoritarian'] },
-  { id:'gland', name:'Godliness Labor and New Democracy',                abbr:'GLAND', color:'#c026d3', ideology:'Christian Socialism',   seats: 13, defaultSeats: 13, inCoalition:false, tags: ['Christian', 'Socialist'] },
-  { id:'salam', name:'Salam!',                                           abbr:'SALAM!', color:'#65a30d', ideology:'Conservatism (Islamic)',  seats: 121, defaultSeats: 121, inCoalition:false, tags: ['Hausa','Islamic', 'Conservative'] },
-  { id:'oba',   name:'Order and Brilliance Assembly',                    abbr:'OBA',   color:'#0b646a', ideology:'Regionalism (Yoruba)', seats: 17, defaultSeats: 17, inCoalition:false, tags: ['Yoruba','Regional', 'Conservative', 'Christian'] },
-  { id:'noa',   name:'NEO OMU ARO',                                      abbr:'NOA',   color:'#ffffff', ideology:'Futurist Fascism',      seats: 12, defaultSeats: 12, inCoalition:false, tags: ['Igbo','Authoritarian'] },
-  { id:'ffa',   name:'Forgotten Farmer Alliance',                        abbr:'FFA',   color:'#e7c084', ideology:'Right-Wing Populism',      seats: 21, defaultSeats: 21, inCoalition:false, tags: ['Populist', 'Conservative'] },
-  { id:'gop',   name:'Group of the People',                              abbr:'GOP',   color:'#16a34a', ideology:'Right-Wing Populism',            seats: 83, defaultSeats: 83, inCoalition:false, tags: ['Hausa','Islamic', 'Populist'] },
-  { id:'ind',  name:'Independents',                                      abbr:'IND',   color:'#94a3b8', ideology:'Non-partisan',    seats:  10, defaultSeats:  10, inCoalition:false, tags: ['Non-partisan'] },
+  { id:'ispn',   name:'Islamic Socialist Party of Nigeria',                 abbr:'ISPN',   color:'#16a34a', ideology:'Islamic Socialism',          seats: 4,   defaultSeats: 4,   inCoalition:false, tags: ['Hausa','Secular','Islamic', 'Socialist'] },
+  { id:'pda',    name:"People's Democratic Alliance",                       abbr:'PDA',    color:'#e60000', ideology:'Nigerian path to Socialism', seats: 11,  defaultSeats: 11,  inCoalition:false, tags: ['Secular', 'Progressive', 'Socialist', 'Green'] },
+  { id:'mecchi', name:"MOTTAINAI-EC/CHI",                                   abbr:'MECCHI', color:'#93c572', ideology:'Green Politics',             seats: 15,  defaultSeats: 15,  inCoalition:false, tags: ['Yoruba','Progressive', 'Green'] },
+  { id:'naa',    name:'New African Alliance',                               abbr:'NAA',    color:'#37b5fd', ideology:'Social Liberalism',          seats: 36,  defaultSeats: 36,  inCoalition:false, tags: ['Igbo','Secular','Progressive', 'Liberal'] },
+  { id:'friln',  name:'Front for the Restoration of Integrity and Liberty', abbr:'FLIRN',  color:'#d97706', ideology:'Liberalism',                 seats: 48,  defaultSeats: 48,  inCoalition:false, tags: ['Secular','Progressive', 'Liberal'] },
+  { id:'abpl',   name:'All Biafra Progressive List',                        abbr:'ABPL',   color:'#241c69', ideology:'Regionalism (Igbo)',         seats: 91,  defaultSeats: 91,  inCoalition:false, tags: ['Igbo','Regional'] },
+  { id:'ndf',    name:'National Democratic Front',                          abbr:'NDF',    color:'#019838', ideology:'Conservatism (Khalilism)',   seats: 68,  defaultSeats: 68,  inCoalition:false, tags: ['Yoruba','Secular', 'Conservative'] },
+  { id:'srp',    name:'Southern Renewal Party',                             abbr:'SRP',    color:'#ffd700', ideology:'Regionalism (South)',        seats: 84,  defaultSeats: 84,  inCoalition:false, tags: ['Yoruba','Regional'] },
+  { id:'fonr',   name:'Friends of New Rwanda',                              abbr:'FONR',   color:'#e5be01', ideology:'Kagamism',                   seats: 0,   defaultSeats: 0,   inCoalition:false, tags: ['Yoruba','Authoritarian'] },
+  { id:'gland',  name:'Godliness Labor and New Democracy',                  abbr:'GLAND',  color:'#c026d3', ideology:'Christian Socialism',        seats: 13,  defaultSeats: 13,  inCoalition:false, tags: ['Christian', 'Socialist'] },
+  { id:'salam',  name:'Salam!',                                             abbr:'SALAM!', color:'#65a30d', ideology:'Conservatism (Islamic)',     seats: 121, defaultSeats: 121, inCoalition:false, tags: ['Hausa','Islamic', 'Conservative'] },
+  { id:'oba',    name:'Order and Brilliance Assembly',                      abbr:'OBA',    color:'#0b646a', ideology:'Regionalism (Yoruba)',       seats: 17,  defaultSeats: 17,  inCoalition:false, tags: ['Yoruba','Regional', 'Conservative', 'Christian'] },
+  { id:'noa',    name:'NEO OMU ARO',                                        abbr:'NOA',    color:'#ffffff', ideology:'Futurist Fascism',           seats: 12,  defaultSeats: 12,  inCoalition:false, tags: ['Igbo','Authoritarian'] },
+  { id:'ffa',    name:'Forgotten Farmer Alliance',                          abbr:'FFA',    color:'#e7c084', ideology:'Right-Wing Populism',        seats: 21,  defaultSeats: 21,  inCoalition:false, tags: ['Populist', 'Conservative'] },
+  { id:'gop',    name:'Group of the People',                                abbr:'GOP',    color:'#16a34a', ideology:'Right-Wing Populism',        seats: 83,  defaultSeats: 83,  inCoalition:false, tags: ['Hausa','Islamic', 'Populist'] },
+  { id:'ind',    name:'Independents',                                       abbr:'IND',    color:'#94a3b8', ideology:'Non-partisan',               seats: 10,  defaultSeats: 10,  inCoalition:false, tags: ['Non-partisan'] },
 ];
 
 const aqiData = [
