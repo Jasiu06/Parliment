@@ -31,6 +31,28 @@
     overflow-x: hidden;
   }
 
+  .article-body img {
+    width: calc(100% + (16px * 2)); 
+	margin-left: -16px;
+	  height: 100%;
+  }
+
+  .image-caption {
+    padding: 8px 0px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--mid);
+    font-size: 12px;
+  }
+
+  .article-header img {
+    padding: 16px 0px 7px;
+  }
+
+  .article-header .image-caption {
+    padding: 0px 16px;
+  }
+	
+
   /* ── AQI TICKER ── */
   .aqi-bar {
     background: var(--bg-panel);
@@ -303,17 +325,6 @@
     background: var(--bg-panel);
   }
 
-  .image-caption {
-    padding: 8px 0px 14px;
-    font-family: 'IBM Plex Mono', monospace;
-    color: var(--mid);
-    font-size: 12px;
-  }
-
-  .article-header .image-caption {
-    padding: 8px 16px 14px;
-  }
-
   .section-tag {
     display: inline-block;
     font-family: 'IBM Plex Mono', monospace;
@@ -542,7 +553,7 @@
   <h1 class="article-headline">Progressive Parties Create Joint Parliamentary Group</h1>
   <p class="article-deck">Following a fractured election, a new progressive bloc consolidates its platform, publishing its defining "Points of Unity" exclusively in Forward!</p>
   <div class="article-byline">By <b>Hadiza Usaini</b> · 8 May 2058</div>
-  <img src="https://raw.githubusercontent.com/Jasiu06/Parliment/refs/heads/main/improve.png" style="width: calc(100% + (16px * 2)); margin-left: -16px; height: 100%;">
+  <img src="https://raw.githubusercontent.com/Jasiu06/Parliment/refs/heads/main/improve.png">
   <div class="image-caption">
   Logo of the Nigerian Progressive Coalition.
   </div>
@@ -608,7 +619,7 @@
 	</li>
 	</ul>
 
-  <img src="https://raw.githubusercontent.com/Jasiu06/Parliment/refs/heads/main/bitmapa.png" style="width: calc(100% + (16px * 2)); margin-left: -16px; height: 100%;">
+  <img src="https://raw.githubusercontent.com/Jasiu06/Parliment/refs/heads/main/bitmapa.png">
   <div class="image-caption">
   The proposed internal organisation of the National Development and Reform Commission (NDRC).
   </div>
